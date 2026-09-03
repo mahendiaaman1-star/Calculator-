@@ -1,101 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Calculator</title>
-    <style>
-        body {
-            background: linear-gradient(to right, #74ebd5, #ACB6E5);
-            font-family: Arial;
-            text-align: center;
-        }
-
-        .calculator {
-            width: 250px;
-            margin: 50px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 15px gray;
-        }
-
-        input {
-            width: 90%;
-            height: 40px;
-            margin-bottom: 10px;
-            font-size: 18px;
-            text-align: right;
-        }
-
-        button {
-            width: 50px;
-            height: 50px;
-            margin: 5px;
-            font-size: 18px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #ddd;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+    }
+    body {
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+    .calculator {
+      width: 100%;
+      max-width: 450px;
+      padding: 20px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    #display {
+      width: 100%;
+      height: 90px;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 55px;
+      text-align: right;
+      padding: 10px;
+      outline: none;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    button {
+      height: 75px;
+      border-radius: 50px;
+      border: none;
+      font-size: 28px;
+      font-weight: 500;
+      cursor: pointer;
+      background-color: #333333;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.1s;
+    }
+    button:active {
+      opacity: 0.6;
+    }
+    button.op {
+      background-color: #ff9f0a;
+      color: white;
+      font-size: 32px;
+    }
+    button.gray {
+      background-color: #a5a5a5;
+      color: black;
+    }
+    button.zero {
+      grid-column: span 2;
+      border-radius: 40px;
+      justify-content: flex-start;
+      padding-left: 30px;
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="calculator">
-    <input type="text" id="display" disabled>
+  <div class="calculator">
+    <input type="text" id="display" placeholder="0" readonly>
+    <div class="grid">
+      <button class="gray" onclick="clearDisplay()">AC</button>
+      <button class="gray" onclick="deleteChar()">⌫</button>
+      <button class="gray" onclick="press('%')">%</button>
+      <button class="op" onclick="press('/')">÷</button>
 
-    <br>
+      <button onclick="press('7')">7</button>
+      <button onclick="press('8')">8</button>
+      <button onclick="press('9')">9</button>
+      <button class="op" onclick="press('*')">×</button>
 
-    <button onclick="press('5')">5</button>
-    <button onclick="press('8')">8</button>
-    <button onclick="press('9')">9</button>
-    <button onclick="press('/')">/</button>
+      <button onclick="press('4')">4</button>
+      <button onclick="press('5')">5</button>
+      <button onclick="press('6')">6</button>
+      <button class="op" onclick="press('-')">−</button>
 
-    <br>
+      <button onclick="press('1')">1</button>
+      <button onclick="press('2')">2</button>
+      <button onclick="press('3')">3</button>
+      <button class="op" onclick="press('+')">+</button>
 
-    <button onclick="press('4')">4</button>
-    <button onclick="press('7')">7</button>
-    <button onclick="press('6')">6</button>
-    <button onclick="press('*')">*</button>
+      <button class="zero" onclick="press('0')">0</button>
+      <button onclick="press('.')">•</button>
+      <button class="op" onclick="calculate()">=</button>
+    </div>
+  </div>
 
-    <br>
+  <script>
+    const display = document.getElementById('display');
 
-    <button onclick="press('1')">1</button>
-    <button onclick="press('2')">2</button>
-    <button onclick="press('3')">3</button>
-    <button onclick="press('-')">-</button>
+    function press(val) {
+      display.value += val;
+    }
 
-    <br>
+    function clearDisplay() {
+      display.value = '';
+    }
 
-    <button onclick="press('0')">0</button>
-    <button onclick="press('.')">.</button>
-    <button onclick="calculate()">=</button>
-    <button onclick="press('+')">+</button>
+    function deleteChar() {
+      display.value = display.value.slice(0, -1);
+    }
 
-    <br>
-
-    <button onclick="clearDisplay()" style="width: 220px; background: red; color: white;">
-        Clear
-    </button>
-</div>
-
-<script>
-function press(value) {
-    document.getElementById("display").value += value;
-}
-
-function calculate() {
-    let result = document.getElementById("display").value;
-    document.getElementById("display").value = eval(result);
-}
-
-function clearDisplay() {
-    document.getElementById("display").value = "";
-}
-</sript>
+    function calculate() {
+      try {
+        if (display.value.trim() !== '') {
+          display.value = eval(display.value);
+        }
+      } catch (err) {
+        display.value = 'Error';
+      }
+    }
+  </script>
 </body>
 </html>
-
